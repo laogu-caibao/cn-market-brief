@@ -1,23 +1,31 @@
-# 数据源
+# 数据源（2026-09-29 实测修订）
 
-## 行情与指数
+## 行情与指数（新浪优先）
 
-- A股/个股：腾讯 `https://qt.gtimg.cn/q=sz002466`、新浪 `https://hq.sinajs.cn/list=sz002466`（需 Referer，见 cn-company-fundamentals/references/data-sources.md）
-- 美股指数（腾讯接口同样支持）：`https://qt.gtimg.cn/q=usDJI,usIXIC,usSPX`（道指/纳指/标普500）
-- 中概：纳斯达克金龙指数 `https://qt.gtimg.cn/q=usHXC`
-- 美元指数：`https://qt.gtimg.cn/q=usDINIW`；离岸人民币：`https://qt.gtimg.cn/q=usUSDCNH`
-- 大宗：原油 `https://qt.gtimg.cn/q=usCL`（NYMEX）、黄金 `https://qt.gtimg.cn/q=usGC`、铜 `https://qt.gtimg.cn/q=usHG`
-- 以上腾讯指数代码未逐一实测，失败时改用网页搜索当日收盘数据并注明来源
+**Fallback 链**：新浪 → 腾讯 → 网页搜索。请求时带桌面端 UA；新浪需 Referer 头，返回 GBK 编码（先 `iconv -f GBK -t UTF-8` 转码）。
+
+- 美股指数：`https://hq.sinajs.cn/list=gb_dji,gb_ixic,gb_inx`（道指/纳指/标普500收盘价、涨跌幅，2026-09-29 实测一次调通）
+- A股指数：`https://hq.sinajs.cn/list=s_sh000001,s_sz399001,s_sz399006`（上证/深成指/创业板）
+  `s_` 格式字段口径：名称，现价，涨跌额，涨跌幅，成交量(手)，成交额（**单位不明，实测值与实际量级不符**），…——**成交额口径若与媒体全A成交额矛盾，以媒体/Wind 口径为准并标注来源，不直接引用接口原始值**
+- 大宗期货：`https://hq.sinajs.cn/list=hf_CL,hf_GC,hf_HG`（NYMEX原油/纽约黄金/美铜连续合约；为亚洲盘中实时价，非收盘价，输出时注明）
+- 离岸人民币：`https://hq.sinajs.cn/list=fx_susdcnh`（字段口径未完全核验，引用时建议与媒体交叉）
+- 中概（纳斯达克金龙指数）：`https://hq.sinajs.cn/list=gb_hxc`——注意返回为 HXC 代理合约，时间戳异常（如盘前/涨跌为零）时改用网页搜索"纳斯达克金龙指数 收盘"并注明来源
+- 美元指数：新浪 `gb_diniw` 实测返回空，腾讯亦不可用，**暂无可用程序化来源**；需要时用网页搜索兜底（如"美元指数 9月28日 收盘"，取新浪外汇/英为财情），搜不到则按 SKILL.md 在早报中略过该项
+
+备选：腾讯 `https://qt.gtimg.cn/q=usDJI,usIXIC,usSPX,usHXC,usDINIW,usUSDCNH,usCL,usGC,usHG`（2026-09-29 实测部分网络环境 TCP 超时不可用，降为备选）
 
 ## A股复盘与板块
 
 - 网页搜索：`上证指数 收盘 涨跌 成交额`、`领涨板块`，取新浪财经/东方财富/同花顺快讯，注明来源与时间
 
-## 今日看点
+## 今日看点（以网页搜索为主力路径）
 
-- 新股申购/解禁/分红除权除息：东方财富数据中心 `https://data.eastmoney.com/` 相关栏目（页面读取），或搜索 `今日新股申购`、`今日限售解禁`
-- 重要公告：复用 cn-announcement-monitor 的东财公告接口
+- 新股申购：搜索 `今日新股申购`（注明来源与日期）
+- 限售解禁：搜索 `今日限售解禁 上市流通`（公司、规模、占流通比，取前 5）
+- 分红除权除息：搜索 `今日除权除息 分红`
+- 重要公告：复用 laogu-announcements 的东财公告接口（`stock_list` 纯数字代码）
 - 宏观事件日历：搜索 `本周财经日历`、`今日重要财经数据`，以权威财经媒体日历为准
+- 备选：东方财富数据中心 `https://data.eastmoney.com/` 相关栏目页面读取（JS 重度渲染，仅在有浏览器自动化环境时使用）
 
 ## 兜底规则
 

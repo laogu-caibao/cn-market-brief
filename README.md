@@ -49,6 +49,25 @@ https://github.com/laogu-caibao/laogu-morning/archive/refs/heads/main.zip
 - 可与 `laogu-announcements` 联动，自动带入关注公司的最新公告
 
 ---
+## English
+
+**laogu-morning — Daily A-share morning brief.** Every trading morning, get a Chinese-language briefing: overnight US and global market moves, a recap of yesterday's A-share session, and today's watch points. One command install: `npx skills add laogu-caibao/laogu-morning`.
+
+## FAQ
+
+**Q：laogu-morning 有什么用？**
+适合的场景：每个交易日早上要一份「隔夜发生了什么 + 今天看什么」的中文简报，不想自己翻外盘行情。
+
+**Q：数据可靠吗？会荐股吗？**
+数字必须来自可核验的公开来源（上市公司公告、交易所公开数据、公开网页），取不到就标「未核验」，绝不编造；只做结构化整理与解读，不构成投资建议。
+
+**Q：怎么安装？支持哪些 AI 平台？**
+```bash
+npx skills add laogu-caibao/laogu-morning
+```
+平台中立 Markdown，Claude Code、Codex、豆包智能体、Workbuddy、扣子 Coze、Trae 等环境均可用；数据能力可用 [laogu-mcp](https://github.com/laogu-caibao/laogu-mcp)（`uvx laogu-mcp`）一次装齐。更多 skill 见[老谷拆财报组织主页](https://github.com/laogu-caibao)。
+---
+
 ## 出品
 
 **老谷拆财报** —— 以数据为刃，剖市场真相
